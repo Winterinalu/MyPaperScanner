@@ -14,7 +14,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.example.mypaperscanner.ui.theme.BrandInk
 
 @Composable
 fun BrandDialog(
@@ -24,7 +23,7 @@ fun BrandDialog(
     confirmButton: @Composable () -> Unit,
     dismissButton: (@Composable () -> Unit)? = null,
     mascotPose: MascotPose? = null,
-    properties: DialogProperties = DialogProperties(usePlatformDefaultWidth = true)
+    properties: DialogProperties = DialogProperties(usePlatformDefaultWidth = false)
 ) {
     var isVisible by remember { mutableStateOf(false) }
 
@@ -37,7 +36,7 @@ fun BrandDialog(
         initialValue = 0f,
         targetValue = 8f,
         animationSpec = infiniteRepeatable(
-            animation = tween(2000, easing = com.example.mypaperscanner.ui.common.SineEaseInOut),
+            animation = tween(2000, easing = SineEaseInOut),
             repeatMode = RepeatMode.Reverse
         ),
         label = "Float"
@@ -47,66 +46,71 @@ fun BrandDialog(
         onDismissRequest = onDismissRequest,
         properties = properties
     ) {
-        AnimatedVisibility(
-            visible = isVisible,
-            enter = scaleIn(
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                    stiffness = Spring.StiffnessLow
-                ),
-                initialScale = 0.8f
-            ),
-            exit = scaleOut(targetScale = 0.8f)
+        Box(
+            modifier = Modifier.wrapContentSize(),
+            contentAlignment = Alignment.Center
         ) {
-            NeubrutalistBox(
-                modifier = Modifier
-                    .widthIn(max = 320.dp)
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .offset(y = floatAnim.dp),
-                backgroundColor = MaterialTheme.colorScheme.surface,
-                borderRadius = 24.dp,
-                shadowOffset = 6.dp
+            AnimatedVisibility(
+                visible = isVisible,
+                enter = scaleIn(
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessLow
+                    ),
+                    initialScale = 0.8f
+                ),
+                exit = scaleOut(targetScale = 0.8f)
             ) {
-                Column(
+                NeubrutalistBox(
                     modifier = Modifier
-                        .padding(24.dp)
-                        .fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .widthIn(max = 320.dp)
+                        .fillMaxWidth(0.85f)
+                        .wrapContentHeight()
+                        .offset(y = floatAnim.dp),
+                    backgroundColor = MaterialTheme.colorScheme.surface,
+                    borderRadius = 24.dp,
+                    shadowOffset = 6.dp
                 ) {
-                    if (mascotPose != null) {
-                        Mascot(
-                            pose = mascotPose,
-                            modifier = Modifier
-                                .size(100.dp)
-                                .padding(bottom = 16.dp)
-                        )
-                    }
-
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = BrandInk,
-                        textAlign = TextAlign.Center
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Text(
-                        text = text,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = BrandInk.copy(alpha = 0.8f),
-                        textAlign = TextAlign.Center
-                    )
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
                     Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                        modifier = Modifier
+                            .padding(24.dp)
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        confirmButton()
-                        dismissButton?.invoke()
+                        if (mascotPose != null) {
+                            Mascot(
+                                pose = mascotPose,
+                                modifier = Modifier
+                                    .size(100.dp)
+                                    .padding(bottom = 16.dp)
+                            )
+                        }
+
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            textAlign = TextAlign.Center
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Text(
+                            text = text,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                            textAlign = TextAlign.Center
+                        )
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            confirmButton()
+                            dismissButton?.invoke()
+                        }
                     }
                 }
             }

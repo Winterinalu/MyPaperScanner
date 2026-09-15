@@ -61,17 +61,34 @@ class MainActivity : ComponentActivity() {
         val database = AppDatabase.getDatabase(this)
         repository = DocumentRepository(database.documentDao())
 
+        val sharedPrefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        
         enableEdgeToEdge()
         setContent {
-            MyPaperScannerTheme {
-                AppNavigation(repository)
+            val isDarkMode = remember { 
+                mutableStateOf(sharedPrefs.getBoolean("is_dark_mode", false)) 
+            }
+            
+            MyPaperScannerTheme(darkTheme = isDarkMode.value) {
+                AppNavigation(
+                    repository = repository,
+                    isDarkMode = isDarkMode.value,
+                    onDarkModeChange = { dark ->
+                        isDarkMode.value = dark
+                        sharedPrefs.edit().putBoolean("is_dark_mode", dark).apply()
+                    }
+                )
             }
         }
     }
 }
 
 @Composable
-fun AppNavigation(repository: DocumentRepository) {
+fun AppNavigation(
+    repository: DocumentRepository,
+    isDarkMode: Boolean,
+    onDarkModeChange: (Boolean) -> Unit
+) {
     val navController = rememberNavController()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -216,6 +233,8 @@ fun AppNavigation(repository: DocumentRepository) {
         }
         composable(Screen.Settings.route) {
             SettingsScreen(
+                isDarkMode = isDarkMode,
+                onDarkModeChange = onDarkModeChange,
                 onBackClick = { navController.popBackStack() },
                 onShowTutorialClick = {
                     navController.navigate(Screen.Tutorial.route)
@@ -246,7 +265,6 @@ fun AppNavigation(repository: DocumentRepository) {
                 onDocumentClick = { doc ->
                     navController.navigate(Screen.PdfViewer.createRoute(doc.id))
                 },
-                cameraPermissionGranted = cameraPermissionGranted,
                 onSettingsClick = {
                     navController.navigate(Screen.Settings.route)
                 }

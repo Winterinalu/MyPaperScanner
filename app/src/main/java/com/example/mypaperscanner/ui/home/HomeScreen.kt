@@ -6,8 +6,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -17,14 +19,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -33,7 +38,6 @@ import com.example.mypaperscanner.data.ScannedDocument
 import com.example.mypaperscanner.ui.common.*
 import com.example.mypaperscanner.ui.theme.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = viewModel(),
@@ -42,7 +46,6 @@ fun HomeScreen(
     onPdfToPictureClick: () -> Unit,
     onLibraryClick: () -> Unit,
     onDocumentClick: (ScannedDocument) -> Unit,
-    cameraPermissionGranted: Boolean,
     onSettingsClick: () -> Unit
 ) {
     val recentDocuments by viewModel.recentDocuments.collectAsState()
@@ -52,156 +55,224 @@ fun HomeScreen(
         viewModel.checkAndGenerateThumbnails(context)
     }
 
+    HomeScreenContent(
+        recentDocuments = recentDocuments,
+        onScanClick = onScanClick,
+        onImageToPdfClick = onImageToPdfClick,
+        onPdfToPictureClick = onPdfToPictureClick,
+        onLibraryClick = onLibraryClick,
+        onDocumentClick = onDocumentClick,
+        onSettingsClick = onSettingsClick
+    )
+}
+
+@Composable
+fun HomeScreenContent(
+    recentDocuments: List<ScannedDocument>,
+    onScanClick: () -> Unit,
+    onImageToPdfClick: () -> Unit,
+    onPdfToPictureClick: () -> Unit,
+    onLibraryClick: () -> Unit,
+    onDocumentClick: (ScannedDocument) -> Unit,
+    onSettingsClick: () -> Unit
+) {
     Scaffold(
-        containerColor = BrandBackground,
-        topBar = {
-            CenterAlignedTopAppBar(
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = BrandBackground),
-                title = { 
-                    Text("MyPaperScanner", style = MaterialTheme.typography.titleLarge, color = BrandInk) 
-                },
-                actions = {
-                    IconButton(onClick = onSettingsClick) {
-                        Icon(Icons.Default.Settings, contentDescription = "Settings", tint = BrandInk)
-                    }
-                }
-            )
-        }
+        containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(horizontal = 24.dp)
+                .verticalScroll(rememberScrollState())
+                .padding(bottom = 32.dp)
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
+            // Modern Header Section
+            HeaderSection(onSettingsClick = onSettingsClick)
             
-            Text(
-                "Good Morning!", 
-                style = MaterialTheme.typography.displayLarge,
-                color = BrandInk
-            )
-            Text(
-                "Ready to scan some papers?", 
-                style = MaterialTheme.typography.bodyLarge,
-                color = BrandInk.copy(alpha = 0.7f)
-            )
-            
-            Spacer(modifier = Modifier.height(32.dp))
-            
-            // Hero Section: Scan
-            NeubrutalistButton(
-                modifier = Modifier.fillMaxWidth().height(140.dp),
-                onClick = onScanClick,
-                containerColor = BrandBlue,
-                borderRadius = 24.dp
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+            Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+                Text(
+                    "Good Morning!", 
+                    style = MaterialTheme.typography.displayLarge,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Text(
+                    "Ready to scan some papers?", 
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+                )
+                
+                Spacer(modifier = Modifier.height(32.dp))
+                
+                // Hero Section: Scan
+                NeubrutalistButton(
+                    modifier = Modifier.fillMaxWidth().height(160.dp),
+                    onClick = onScanClick,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    borderRadius = 28.dp,
+                    shadowOffset = 8.dp
                 ) {
-                    Column(modifier = Modifier.padding(start = 8.dp)) {
-                        Text(
-                            "New Scan", 
-                            style = MaterialTheme.typography.headlineMedium,
-                            color = Color.White
-                        )
-                        Text(
-                            "Digitize in seconds", 
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White.copy(alpha = 0.8f)
-                        )
-                    }
-                    Surface(
-                        modifier = Modifier.size(64.dp),
-                        shape = CircleShape,
-                        color = Color.White.copy(alpha = 0.2f)
+                    Row(
+                        modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Icon(
-                            Icons.Default.CameraAlt, 
-                            contentDescription = null,
-                            modifier = Modifier.padding(16.dp),
-                            tint = Color.White
-                        )
+                        Column {
+                            Text(
+                                "New Scan", 
+                                style = MaterialTheme.typography.headlineMedium,
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                            Text(
+                                "Digitize in seconds", 
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
+                            )
+                        }
+                        Surface(
+                            modifier = Modifier.size(72.dp),
+                            shape = CircleShape,
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f)
+                        ) {
+                            Icon(
+                                Icons.Default.CameraAlt, 
+                                contentDescription = null,
+                                modifier = Modifier.padding(16.dp),
+                                tint = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
                     }
                 }
-            }
-            
-            Spacer(modifier = Modifier.height(32.dp))
-            
-            // Secondary Actions
-            Text(
-                "Quick Tools", 
-                style = MaterialTheme.typography.titleLarge,
-                color = BrandInk
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Row(modifier = Modifier.fillMaxWidth()) {
-                ToolCard(
-                    title = "Images to PDF",
-                    icon = Icons.Default.PictureAsPdf,
-                    color = BrandGreen,
-                    onClick = onImageToPdfClick,
-                    modifier = Modifier.weight(1f)
-                )
-                Spacer(modifier = Modifier.width(20.dp))
-                ToolCard(
-                    title = "PDF to Image",
-                    icon = Icons.Default.Image,
-                    color = BrandYellow,
-                    onClick = onPdfToPictureClick,
-                    modifier = Modifier.weight(1f)
-                )
-            }
-            
-            Spacer(modifier = Modifier.height(40.dp))
-            
-            // Recent Documents
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+                
+                Spacer(modifier = Modifier.height(32.dp))
+                
+                // Secondary Actions
                 Text(
-                    "Recent Files", 
+                    "Quick Tools", 
                     style = MaterialTheme.typography.titleLarge,
-                    color = BrandInk
+                    color = MaterialTheme.colorScheme.onBackground
                 )
-                TextButton(onClick = onLibraryClick) {
-                    Text("See All", color = BrandBlue, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    ToolCard(
+                        title = "Images to PDF",
+                        icon = Icons.Default.PictureAsPdf,
+                        color = MaterialTheme.colorScheme.secondary,
+                        onClick = onImageToPdfClick,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Spacer(modifier = Modifier.width(20.dp))
+                    ToolCard(
+                        title = "PDF to Image",
+                        icon = Icons.Default.Image,
+                        color = MaterialTheme.colorScheme.tertiary,
+                        onClick = onPdfToPictureClick,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                
+                Spacer(modifier = Modifier.height(40.dp))
+                
+                // Recent Documents
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        "Recent Files", 
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                    TextButton(onClick = onLibraryClick) {
+                        val brandBlue = if (androidx.compose.foundation.isSystemInDarkTheme()) BrandBlueDark else BrandBlue
+                        Text(
+                            "See All", 
+                            color = brandBlue, 
+                            style = MaterialTheme.typography.bodyLarge, 
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
             
             if (recentDocuments.isNotEmpty()) {
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = PaddingValues(bottom = 24.dp)
+                    contentPadding = PaddingValues(start = 24.dp, end = 24.dp, bottom = 8.dp)
                 ) {
                     items(recentDocuments.take(5)) { doc ->
                         RecentStickyCard(
                             document = doc,
                             onClick = { onDocumentClick(doc) },
-                            rotation = (doc.id % 6 - 3).toFloat() // Randomish tilt
+                            rotation = (doc.id % 6).toFloat() - 3f
                         )
                     }
                 }
             } else {
                 Box(
                     modifier = Modifier
+                        .padding(horizontal = 24.dp)
                         .fillMaxWidth()
                         .height(120.dp)
-                        .background(Color.White, shape = RoundedCornerShape(16.dp))
-                        .border(2.dp, BrandInk, shape = RoundedCornerShape(16.dp)),
+                        .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(16.dp))
+                        .border(
+                            2.dp, 
+                            if (androidx.compose.foundation.isSystemInDarkTheme()) BrandInkDark else BrandInk, 
+                            shape = RoundedCornerShape(16.dp)
+                        ),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         "No recent scans", 
                         style = MaterialTheme.typography.bodyMedium,
-                        color = BrandInk.copy(alpha = 0.5f)
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun HeaderSection(onSettingsClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp, vertical = 20.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column {
+            Text(
+                "MyPaperScanner",
+                style = MaterialTheme.typography.titleLarge.copy(
+                    letterSpacing = 0.5.sp,
+                    fontWeight = FontWeight.ExtraBold
+                ),
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Box(
+                modifier = Modifier
+                    .width(40.dp)
+                    .height(4.dp)
+                    .background(MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(2.dp))
+            )
+        }
+        
+        NeubrutalistButton(
+            onClick = onSettingsClick,
+            containerColor = MaterialTheme.colorScheme.surface,
+            borderRadius = 22.dp,
+            shadowOffset = 1.5.dp,
+            contentPadding = PaddingValues(0.dp),
+            modifier = Modifier.size(44.dp)
+        ) {
+            Icon(
+                Icons.Default.Settings, 
+                contentDescription = "Settings", 
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.size(20.dp)
+            )
         }
     }
 }
@@ -217,21 +288,27 @@ fun ToolCard(
     NeubrutalistButton(
         onClick = onClick,
         containerColor = color,
-        modifier = modifier.height(100.dp),
-        borderRadius = 16.dp
+        modifier = modifier.height(110.dp),
+        borderRadius = 20.dp,
+        shadowOffset = 6.dp
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Icon(icon, contentDescription = null, modifier = Modifier.size(24.dp), tint = BrandInk)
-            Spacer(modifier = Modifier.height(8.dp))
+            Icon(
+                icon, 
+                contentDescription = null, 
+                modifier = Modifier.size(28.dp), 
+                tint = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.height(10.dp))
             Text(
                 title, 
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
-                color = BrandInk,
+                color = MaterialTheme.colorScheme.onBackground,
                 maxLines = 1
             )
         }
@@ -245,26 +322,30 @@ fun RecentStickyCard(
     rotation: Float
 ) {
     val isPdf = document.filePath.endsWith(".pdf", ignoreCase = true)
+    val currentInk = if (androidx.compose.foundation.isSystemInDarkTheme()) BrandInkDark else BrandInk
     
     Box(
         modifier = Modifier
             .rotate(rotation)
-            .width(140.dp)
+            .width(150.dp)
+            .padding(vertical = 8.dp)
     ) {
         NeubrutalistBox(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(180.dp)
+                .height(200.dp)
                 .clickable { onClick() },
-            backgroundColor = Color.White,
-            borderRadius = 4.dp // Sticky note style
+            backgroundColor = MaterialTheme.colorScheme.surface,
+            borderRadius = 8.dp,
+            shadowOffset = 6.dp
         ) {
             Column {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(110.dp)
-                        .background(BrandBackground)
+                        .height(120.dp)
+                        .background(MaterialTheme.colorScheme.background)
+                        .bottomBorder(1.dp, currentInk.copy(alpha = 0.1f))
                 ) {
                     if (document.thumbnailPath != null) {
                         AsyncImage(
@@ -277,8 +358,28 @@ fun RecentStickyCard(
                         Icon(
                             if (isPdf) Icons.Default.PictureAsPdf else Icons.Default.Image,
                             contentDescription = null,
-                            modifier = Modifier.size(32.dp).align(Alignment.Center),
-                            tint = BrandInk.copy(alpha = 0.3f)
+                            modifier = Modifier.size(40.dp).align(Alignment.Center),
+                            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+                        )
+                    }
+                    
+                    // Format Badge
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(8.dp)
+                            .background(
+                                color = if (isPdf) BrandBlue else BrandGreen,
+                                shape = RoundedCornerShape(4.dp)
+                            )
+                            .border(1.dp, Color.White, shape = RoundedCornerShape(4.dp))
+                    ) {
+                        Text(
+                            text = if (isPdf) "PDF" else "IMG",
+                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
+                            color = Color.White,
+                            fontSize = 8.sp,
+                            fontWeight = FontWeight.Bold
                         )
                     }
                 }
@@ -288,18 +389,43 @@ fun RecentStickyCard(
                         text = document.title,
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Bold,
-                        color = BrandInk,
+                        color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
                     Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        text = "${document.pageCount} pg",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = BrandInk.copy(alpha = 0.6f)
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Default.Description,
+                            contentDescription = null,
+                            modifier = Modifier.size(10.dp),
+                            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "${document.pageCount} pages",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                        )
+                    }
                 }
             }
         }
     }
+}
+
+private fun Modifier.bottomBorder(strokeWidth: Dp, color: Color) = this.drawWithContent {
+    drawContent()
+    val width = size.width
+    val height = size.height
+    val strokeWidthPx = strokeWidth.toPx()
+
+    drawLine(
+        color = color,
+        start = Offset(x = 0f, y = height),
+        end = Offset(x = width, y = height),
+        strokeWidth = strokeWidthPx
+    )
 }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -14,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -21,18 +23,24 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mypaperscanner.ui.theme.BrandInk
+import com.example.mypaperscanner.ui.theme.BrandInkDark
 
 @Composable
 fun NeubrutalistBox(
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
-    shadowColor: Color = BrandInk,
+    shadowColor: Color = if (isSystemInDarkTheme()) BrandInkDark else BrandInk,
     shadowOffset: Dp = 4.dp,
     borderRadius: Dp = 12.dp,
     borderWidth: Dp = 2.dp,
     content: @Composable BoxScope.() -> Unit
 ) {
-    Box(modifier = modifier) {
+    val currentInk = if (isSystemInDarkTheme()) BrandInkDark else BrandInk
+    
+    // Outer padding reserves space for the offset shadow to prevent parent clipping
+    Box(
+        modifier = modifier.padding(end = shadowOffset, bottom = shadowOffset)
+    ) {
         // Shadow
         Box(
             modifier = Modifier
@@ -43,9 +51,10 @@ fun NeubrutalistBox(
         // Main Box
         Box(
             modifier = Modifier
-                .fillMaxSize()
+                .wrapContentSize()
+                .clip(RoundedCornerShape(borderRadius))
                 .background(backgroundColor, shape = RoundedCornerShape(borderRadius))
-                .border(borderWidth, BrandInk, shape = RoundedCornerShape(borderRadius)),
+                .border(borderWidth, currentInk, shape = RoundedCornerShape(borderRadius)),
             content = content
         )
     }
@@ -60,14 +69,17 @@ fun NeubrutalistButton(
     shadowOffset: Dp = 4.dp,
     borderRadius: Dp = 16.dp,
     enabled: Boolean = true,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 24.dp, vertical = 14.dp),
     content: @Composable RowScope.() -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     val scale by animateFloatAsState(if (isPressed) 0.96f else 1f, label = "ButtonScale")
+    val currentInk = if (isSystemInDarkTheme()) BrandInkDark else BrandInk
 
     Box(
         modifier = modifier
+            .padding(end = shadowOffset, bottom = shadowOffset)
             .scale(scale)
             .clickable(
                 interactionSource = interactionSource,
@@ -82,24 +94,25 @@ fun NeubrutalistButton(
                 modifier = Modifier
                     .matchParentSize()
                     .offset(x = shadowOffset, y = shadowOffset)
-                    .background(BrandInk, shape = RoundedCornerShape(borderRadius))
+                    .background(currentInk, shape = RoundedCornerShape(borderRadius))
             )
         }
 
         Surface(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .offset(
                     x = if (isPressed) shadowOffset / 2 else 0.dp,
                     y = if (isPressed) shadowOffset / 2 else 0.dp
                 )
-                .border(2.dp, BrandInk, shape = RoundedCornerShape(borderRadius)),
+                .border(2.dp, currentInk, shape = RoundedCornerShape(borderRadius)),
             color = if (enabled) containerColor else Color.Gray,
+            contentColor = contentColor,
             shape = RoundedCornerShape(borderRadius)
         ) {
             Row(
                 modifier = Modifier
-                    .padding(horizontal = 24.dp, vertical = 14.dp),
+                    .padding(contentPadding),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
                 content = content
@@ -112,14 +125,17 @@ fun NeubrutalistButton(
 fun StickerBadge(
     text: String,
     containerColor: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    shadowOffset: Dp = 2.dp
 ) {
-    Box(modifier = modifier) {
+    Box(
+        modifier = modifier.padding(end = shadowOffset, bottom = shadowOffset)
+    ) {
         // Shadow
         Box(
             modifier = Modifier
                 .matchParentSize()
-                .offset(x = 2.dp, y = 2.dp)
+                .offset(x = shadowOffset, y = shadowOffset)
                 .background(BrandInk, shape = RoundedCornerShape(6.dp))
         )
         // Badge

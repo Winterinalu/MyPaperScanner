@@ -283,6 +283,7 @@ fun DocumentGridItem(
         modifier = Modifier
             .fillMaxWidth()
             .height(220.dp)
+            .clip(RoundedCornerShape(12.dp))
             .combinedClickable(
                 onClick = onClick,
                 onLongClick = onLongClick
