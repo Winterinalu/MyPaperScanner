@@ -40,9 +40,12 @@ android {
             if (keystorePath != null) {
                 signingConfig = signingConfigs.getByName("release")
             }
-            optimization {
-                enable = false
-            }
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -79,17 +82,10 @@ dependencies {
 
     // UI & Animation
     implementation(libs.androidx.compose.ui.text.google.fonts)
-    implementation(libs.lottie.compose)
 
     // Image Loading
     implementation(libs.coil.compose)
     implementation(libs.coil.network)
-
-    // CameraX
-    implementation(libs.androidx.camera.core)
-    implementation(libs.androidx.camera.camera2)
-    implementation(libs.androidx.camera.lifecycle)
-    implementation(libs.androidx.camera.view)
 
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))

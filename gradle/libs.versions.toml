@@ -11,12 +11,9 @@ composeBom = "2026.02.01"
 navigationCompose = "2.10.1"
 room = "2.8.5"
 mlkitScanner = "16.0.0"
-poi = "5.5.1"
 lifecycleViewModelCompose = "2.11.0"
 ksp = "2.2.10-2.0.2"
 coil = "3.1.0"
-camerax = "1.6.2"
-lottie = "6.4.0"
 googleFonts = "1.19.0"
 
 [libraries]
@@ -41,14 +38,8 @@ room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 mlkit-document-scanner = { group = "com.google.android.gms", name = "play-services-mlkit-document-scanner", version.ref = "mlkitScanner" }
-poi-ooxml = { group = "org.apache.poi", name = "poi-ooxml", version.ref = "poi" }
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-network = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
-androidx-camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "camerax" }
-androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax" }
-androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
-androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
-lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
 androidx-compose-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts" }
 
 [plugins]
