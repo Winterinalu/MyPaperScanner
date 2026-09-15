@@ -60,6 +60,7 @@ fun BrandDialog(
         ) {
             NeubrutalistBox(
                 modifier = Modifier
+                    .widthIn(max = 320.dp)
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .offset(y = floatAnim.dp),

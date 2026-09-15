@@ -14,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -84,6 +85,7 @@ fun ZoomableAsyncImage(uri: Uri) {
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .clipToBounds()
             .transformable(state = state)
             .graphicsLayer(
                 scaleX = scale.coerceIn(1f, 5f),

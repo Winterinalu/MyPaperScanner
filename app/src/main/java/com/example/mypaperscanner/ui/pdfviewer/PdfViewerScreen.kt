@@ -18,6 +18,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
@@ -135,7 +136,7 @@ fun PdfViewerScreen(
             val file = File(doc.filePath)
             if (file.exists()) {
                 if (doc.title.endsWith(".jpg", ignoreCase = true) || doc.title.endsWith(".png", ignoreCase = true)) {
-                    Box(modifier = Modifier.padding(paddingValues).fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Box(modifier = Modifier.padding(paddingValues).fillMaxSize().clipToBounds(), contentAlignment = Alignment.Center) {
                         AsyncImage(
                             model = file,
                             contentDescription = null,
@@ -216,6 +217,7 @@ fun ZoomableImage(bitmap: Bitmap) {
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .clipToBounds()
             .transformable(state = state)
             .graphicsLayer(
                 scaleX = scale.coerceIn(1f, 5f),

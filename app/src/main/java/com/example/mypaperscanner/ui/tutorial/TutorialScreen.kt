@@ -103,23 +103,19 @@ fun TutorialSlide(pageIndex: Int) {
     val data = when (pageIndex) {
         0 -> TutorialData(
             title = "Welcome to MyPaperScanner!",
-            description = "The friendliest way to digitize your world. Let's get you set up in seconds.",
-            pose = MascotPose.WAVING
+            description = "The friendliest way to digitize your world. Let's get you set up in seconds."
         )
         1 -> TutorialData(
             title = "Dual Format Support",
-            description = "Save your scans as crisp PDFs or high-quality Images. You're in control of every pixel.",
-            pose = MascotPose.CAMERA
+            description = "Save your scans as crisp PDFs or high-quality Images. You're in control of every pixel."
         )
         2 -> TutorialData(
             title = "Everything Organized",
-            description = "Your documents live in a beautiful gallery. Finding that one receipt has never been easier.",
-            pose = MascotPose.SEARCHING
+            description = "Your documents live in a beautiful gallery. Finding that one receipt has never been easier."
         )
         else -> TutorialData(
             title = "Instant Conversion",
-            description = "Need to turn that image into a PDF? One tap is all it takes to switch formats anytime.",
-            pose = MascotPose.HAPPY
+            description = "Need to turn that image into a PDF? One tap is all it takes to switch formats anytime."
         )
     }
 
@@ -130,18 +126,14 @@ fun TutorialSlide(pageIndex: Int) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Mascot(pose = data.pose, modifier = Modifier.size(200.dp))
-        
-        Spacer(modifier = Modifier.height(64.dp))
-        
         Text(
             text = data.title,
-            style = MaterialTheme.typography.headlineMedium,
+            style = MaterialTheme.typography.displayLarge,
             color = BrandInk,
             textAlign = TextAlign.Center
         )
         
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
         
         Text(
             text = data.description,
@@ -155,6 +147,5 @@ fun TutorialSlide(pageIndex: Int) {
 
 data class TutorialData(
     val title: String,
-    val description: String,
-    val pose: MascotPose
+    val description: String
 )
