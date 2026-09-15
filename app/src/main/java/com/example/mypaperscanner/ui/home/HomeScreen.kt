@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -293,12 +294,13 @@ fun ToolCard(
     NeubrutalistButton(
         onClick = onClick,
         containerColor = color,
-        contentColor = onColor,
+        contentColor = Color.Black,
         modifier = modifier.height(110.dp),
         borderRadius = 20.dp,
         shadowOffset = 6.dp,
         shadowColor = if (isDark) Color.White else Color.Black,
-        borderColor = if (isDark) Color.White else Color.Black
+        borderColor = if (isDark) Color.White else Color.Black,
+        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -317,7 +319,9 @@ fun ToolCard(
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
-                maxLines = 1
+                textAlign = TextAlign.Center,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }

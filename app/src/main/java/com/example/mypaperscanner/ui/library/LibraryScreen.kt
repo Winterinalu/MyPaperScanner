@@ -377,7 +377,10 @@ fun DocumentGridItem(
                 onDismissRequest = { showMenu = false },
                 modifier = Modifier
                     .background(Color.Transparent)
-                    .padding(8.dp)
+                    .padding(8.dp),
+                containerColor = Color.Transparent,
+                tonalElevation = 0.dp,
+                shadowElevation = 0.dp
             ) {
                 NeubrutalistBox(
                     modifier = Modifier.width(200.dp),
