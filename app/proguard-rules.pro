@@ -11,6 +11,19 @@
 -dontwarn com.google.mlkit.**
 -dontwarn com.google.android.gms.**
 
-# Keep everything in our app packages from being aggressively optimized away if reflection is assumed
--keep class com.example.mypaperscanner.** { *; }
+# Jetpack Compose & Navigation Rules
+-keepclassmembers class * {
+    @androidx.compose.runtime.Composable <methods>;
+    @androidx.compose.runtime.ReadOnlyComposable <methods>;
+}
+
+# Keep the entire UI and ViewModel layer to prevent navigation and dialog crashes
+-keep class com.example.mypaperscanner.ui.** { *; }
+-keep class com.example.mypaperscanner.MainActivity { *; }
+-keep class com.example.mypaperscanner.util.** { *; }
+
+# Coil Image Loading
+-keep class coil3.** { *; }
+-dontwarn coil3.**
+
 

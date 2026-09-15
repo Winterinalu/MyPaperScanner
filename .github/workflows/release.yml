@@ -25,6 +25,7 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
+          cache: 'gradle'  # Explicitly enable Gradle caching
 
       - name: Setup Gradle and Build Cache
         uses: gradle/actions/setup-gradle@v4
