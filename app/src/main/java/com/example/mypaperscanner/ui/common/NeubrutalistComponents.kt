@@ -22,20 +22,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.mypaperscanner.ui.theme.BrandInk
-import com.example.mypaperscanner.ui.theme.BrandInkDark
 
 @Composable
 fun NeubrutalistBox(
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
-    shadowColor: Color = if (isSystemInDarkTheme()) BrandInkDark else BrandInk,
+    shadowColor: Color? = null,
+    borderColor: Color? = null,
     shadowOffset: Dp = 4.dp,
     borderRadius: Dp = 12.dp,
     borderWidth: Dp = 2.dp,
     content: @Composable BoxScope.() -> Unit
 ) {
-    val currentInk = if (isSystemInDarkTheme()) BrandInkDark else BrandInk
+    val isDark = MaterialTheme.colorScheme.onBackground == Color.White
+    val currentInk = borderColor ?: if (isDark) Color.White else Color.Black
+    val currentShadow = shadowColor ?: if (isDark) Color.White else Color.Black
     
     // Outer padding reserves space for the offset shadow to prevent parent clipping
     Box(
@@ -46,12 +47,12 @@ fun NeubrutalistBox(
             modifier = Modifier
                 .matchParentSize()
                 .offset(x = shadowOffset, y = shadowOffset)
-                .background(shadowColor, shape = RoundedCornerShape(borderRadius))
+                .background(currentShadow, shape = RoundedCornerShape(borderRadius))
         )
         // Main Box
         Box(
             modifier = Modifier
-                .wrapContentSize()
+                .matchParentSize()
                 .clip(RoundedCornerShape(borderRadius))
                 .background(backgroundColor, shape = RoundedCornerShape(borderRadius))
                 .border(borderWidth, currentInk, shape = RoundedCornerShape(borderRadius)),
@@ -66,6 +67,8 @@ fun NeubrutalistButton(
     onClick: () -> Unit,
     containerColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onPrimary,
+    shadowColor: Color? = null,
+    borderColor: Color? = null,
     shadowOffset: Dp = 4.dp,
     borderRadius: Dp = 16.dp,
     enabled: Boolean = true,
@@ -75,7 +78,9 @@ fun NeubrutalistButton(
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     val scale by animateFloatAsState(if (isPressed) 0.96f else 1f, label = "ButtonScale")
-    val currentInk = if (isSystemInDarkTheme()) BrandInkDark else BrandInk
+    val isDark = MaterialTheme.colorScheme.onBackground == Color.White
+    val currentInk = borderColor ?: if (isDark) Color.White else Color.Black
+    val currentShadow = shadowColor ?: currentInk
 
     Box(
         modifier = modifier
@@ -94,7 +99,7 @@ fun NeubrutalistButton(
                 modifier = Modifier
                     .matchParentSize()
                     .offset(x = shadowOffset, y = shadowOffset)
-                    .background(currentInk, shape = RoundedCornerShape(borderRadius))
+                    .background(currentShadow, shape = RoundedCornerShape(borderRadius))
             )
         }
 
@@ -128,6 +133,10 @@ fun StickerBadge(
     modifier: Modifier = Modifier,
     shadowOffset: Dp = 2.dp
 ) {
+    val isDark = MaterialTheme.colorScheme.onBackground == Color.White
+    val shadowColor = if (isDark) Color.White else Color.Black
+    val borderColor = if (isDark && containerColor == Color.White) Color.Black else if (isDark) Color.White else Color.Black
+    
     Box(
         modifier = modifier.padding(end = shadowOffset, bottom = shadowOffset)
     ) {
@@ -136,18 +145,18 @@ fun StickerBadge(
             modifier = Modifier
                 .matchParentSize()
                 .offset(x = shadowOffset, y = shadowOffset)
-                .background(BrandInk, shape = RoundedCornerShape(6.dp))
+                .background(shadowColor, shape = RoundedCornerShape(6.dp))
         )
         // Badge
         Surface(
             color = containerColor,
             shape = RoundedCornerShape(6.dp),
-            modifier = Modifier.border(1.5.dp, BrandInk, shape = RoundedCornerShape(6.dp))
+            modifier = Modifier.border(1.5.dp, borderColor, shape = RoundedCornerShape(6.dp))
         ) {
             Text(
                 text = text,
                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                color = BrandInk,
+                color = if (containerColor == Color.White) Color.Black else Color.White,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.ExtraBold,
                 style = MaterialTheme.typography.labelSmall

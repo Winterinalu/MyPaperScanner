@@ -7,44 +7,45 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = BrandBlueDark,
-    onPrimary = BrandInk,
-    primaryContainer = BrandBlue,
-    onPrimaryContainer = BrandBackground,
-    secondary = BrandGreenDark,
-    onSecondary = BrandInk,
-    secondaryContainer = BrandGreen,
-    onSecondaryContainer = BrandBackground,
-    tertiary = BrandYellowDark,
-    onTertiary = BrandInk,
+    primary = BrandBlue,
+    onPrimary = Color.Black,
+    primaryContainer = BrandBlueDark,
+    onPrimaryContainer = Color.Black,
+    secondary = BrandGreen,
+    onSecondary = Color.Black,
+    secondaryContainer = BrandGreenDark,
+    onSecondaryContainer = Color.Black,
+    tertiary = BrandYellow,
+    onTertiary = Color.Black,
     background = BrandBackgroundDark,
-    onBackground = BrandInkDark,
-    surface = BrandBackgroundDark,
-    onSurface = BrandInkDark,
+    onBackground = Color.White,
+    surface = Color.Black,
+    onSurface = Color.White,
     error = Error,
     onError = OnError
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = BrandBlue,
-    onPrimary = BlueOnPrimary,
+    onPrimary = Color.White,
     primaryContainer = BluePrimaryContainer,
     onPrimaryContainer = BlueOnPrimaryContainer,
     secondary = BrandGreen,
-    onSecondary = GreenOnSecondary,
+    onSecondary = Color.White,
     secondaryContainer = GreenSecondaryContainer,
     onSecondaryContainer = GreenOnSecondaryContainer,
     tertiary = BrandYellow,
-    onTertiary = BrandInk,
+    onTertiary = Color.Black,
     background = BrandBackground,
-    onBackground = BrandInk,
-    surface = BrandBackground,
-    onSurface = BrandInk,
+    onBackground = Color.Black,
+    surface = Color.White,
+    onSurface = Color.Black,
     error = Error,
     onError = OnError
 )

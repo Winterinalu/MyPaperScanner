@@ -104,10 +104,14 @@ fun HomeScreenContent(
                 Spacer(modifier = Modifier.height(32.dp))
                 
                 // Hero Section: Scan
+                val isDark = MaterialTheme.colorScheme.onBackground == Color.White
                 NeubrutalistButton(
                     modifier = Modifier.fillMaxWidth().height(160.dp),
                     onClick = onScanClick,
-                    containerColor = MaterialTheme.colorScheme.primary,
+                    containerColor = BrandBlue,
+                    contentColor = Color.Black,
+                    shadowColor = if (isDark) Color.White else Color.Black,
+                    borderColor = if (isDark) Color.White else Color.Black,
                     borderRadius = 28.dp,
                     shadowOffset = 8.dp
                 ) {
@@ -120,24 +124,24 @@ fun HomeScreenContent(
                             Text(
                                 "New Scan", 
                                 style = MaterialTheme.typography.headlineMedium,
-                                color = MaterialTheme.colorScheme.onPrimary
+                                color = Color.Black
                             )
                             Text(
                                 "Digitize in seconds", 
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
+                                color = Color.Black.copy(alpha = 0.8f)
                             )
                         }
                         Surface(
                             modifier = Modifier.size(72.dp),
                             shape = CircleShape,
-                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f)
+                            color = Color.Black.copy(alpha = 0.1f)
                         ) {
                             Icon(
                                 Icons.Default.CameraAlt, 
                                 contentDescription = null,
                                 modifier = Modifier.padding(16.dp),
-                                tint = MaterialTheme.colorScheme.onPrimary
+                                tint = Color.Black
                             )
                         }
                     }
@@ -173,6 +177,7 @@ fun HomeScreenContent(
                 Spacer(modifier = Modifier.height(40.dp))
                 
                 // Recent Documents
+                val brandBlue = if (isDark) BrandBlueDark else BrandBlue
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -184,7 +189,6 @@ fun HomeScreenContent(
                         color = MaterialTheme.colorScheme.onBackground
                     )
                     TextButton(onClick = onLibraryClick) {
-                        val brandBlue = if (androidx.compose.foundation.isSystemInDarkTheme()) BrandBlueDark else BrandBlue
                         Text(
                             "See All", 
                             color = brandBlue, 
@@ -285,12 +289,15 @@ fun ToolCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val isDark = MaterialTheme.colorScheme.onBackground == Color.White
     NeubrutalistButton(
         onClick = onClick,
         containerColor = color,
         modifier = modifier.height(110.dp),
         borderRadius = 20.dp,
-        shadowOffset = 6.dp
+        shadowOffset = 6.dp,
+        shadowColor = if (isDark) Color.White else Color.Black,
+        borderColor = if (isDark) Color.White else Color.Black
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -301,14 +308,14 @@ fun ToolCard(
                 icon, 
                 contentDescription = null, 
                 modifier = Modifier.size(28.dp), 
-                tint = MaterialTheme.colorScheme.onBackground
+                tint = Color.Black
             )
             Spacer(modifier = Modifier.height(10.dp))
             Text(
                 title, 
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground,
+                color = Color.Black,
                 maxLines = 1
             )
         }
@@ -322,7 +329,7 @@ fun RecentStickyCard(
     rotation: Float
 ) {
     val isPdf = document.filePath.endsWith(".pdf", ignoreCase = true)
-    val currentInk = if (androidx.compose.foundation.isSystemInDarkTheme()) BrandInkDark else BrandInk
+    val isDark = MaterialTheme.colorScheme.onBackground == Color.White
     
     Box(
         modifier = Modifier
@@ -335,17 +342,19 @@ fun RecentStickyCard(
                 .fillMaxWidth()
                 .height(200.dp)
                 .clickable { onClick() },
-            backgroundColor = MaterialTheme.colorScheme.surface,
+            backgroundColor = if (isDark) Color.Black else MaterialTheme.colorScheme.surface,
             borderRadius = 8.dp,
-            shadowOffset = 6.dp
+            shadowOffset = 6.dp,
+            shadowColor = if (isDark) Color.White else Color.Black,
+            borderColor = if (isDark) Color.White else Color.Black
         ) {
             Column {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(120.dp)
-                        .background(MaterialTheme.colorScheme.background)
-                        .bottomBorder(1.dp, currentInk.copy(alpha = 0.1f))
+                        .background(if (isDark) Color(0xFF1A1A1A) else MaterialTheme.colorScheme.background)
+                        .bottomBorder(1.dp, if (isDark) Color.White.copy(alpha = 0.1f) else Color.Black.copy(alpha = 0.1f))
                 ) {
                     if (document.thumbnailPath != null) {
                         AsyncImage(
@@ -377,7 +386,7 @@ fun RecentStickyCard(
                         Text(
                             text = if (isPdf) "PDF" else "IMG",
                             modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
-                            color = Color.White,
+                            color = if (isDark) Color.Black else Color.White,
                             fontSize = 8.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -389,7 +398,7 @@ fun RecentStickyCard(
                         text = document.title,
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface,
+                        color = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -401,13 +410,13 @@ fun RecentStickyCard(
                             Icons.Default.Description,
                             contentDescription = null,
                             modifier = Modifier.size(10.dp),
-                            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                            tint = if (isDark) Color.White.copy(alpha = 0.6f) else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = "${document.pageCount} pages",
                             style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                            color = if (isDark) Color.White.copy(alpha = 0.6f) else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                         )
                     }
                 }
