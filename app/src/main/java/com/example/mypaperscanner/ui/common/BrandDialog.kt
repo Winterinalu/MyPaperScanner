@@ -24,7 +24,7 @@ fun BrandDialog(
     confirmButton: @Composable () -> Unit,
     dismissButton: (@Composable () -> Unit)? = null,
     mascotPose: MascotPose? = null,
-    properties: DialogProperties = DialogProperties()
+    properties: DialogProperties = DialogProperties(usePlatformDefaultWidth = true)
 ) {
     var isVisible by remember { mutableStateOf(false) }
 

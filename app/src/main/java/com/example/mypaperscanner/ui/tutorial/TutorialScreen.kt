@@ -54,11 +54,16 @@ fun TutorialScreen(
                 }
 
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    TextButton(onClick = onFinish) {
+                    TextButton(
+                        onClick = onFinish,
+                        contentPadding = PaddingValues(0.dp)
+                    ) {
                         Text("Skip", color = BrandInk.copy(alpha = 0.5f), style = MaterialTheme.typography.bodyLarge)
                     }
 
