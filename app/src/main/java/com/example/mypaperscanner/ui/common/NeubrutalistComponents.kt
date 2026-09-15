@@ -29,17 +29,18 @@ import com.example.mypaperscanner.ui.theme.BrandInkDark
 fun NeubrutalistBox(
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
-    shadowColor: Color = if (isSystemInDarkTheme()) BrandInkDark else BrandInk,
+    shadowColor: Color = MaterialTheme.colorScheme.onSurface,
     shadowOffset: Dp = 4.dp,
     borderRadius: Dp = 12.dp,
     borderWidth: Dp = 2.dp,
     content: @Composable BoxScope.() -> Unit
 ) {
-    val currentInk = if (isSystemInDarkTheme()) BrandInkDark else BrandInk
+    val currentInk = MaterialTheme.colorScheme.onSurface
     
     // Outer padding reserves space for the offset shadow to prevent parent clipping
     Box(
-        modifier = modifier.padding(end = shadowOffset, bottom = shadowOffset)
+        modifier = modifier.padding(end = shadowOffset, bottom = shadowOffset),
+        propagateMinConstraints = true
     ) {
         // Shadow
         Box(
@@ -51,7 +52,6 @@ fun NeubrutalistBox(
         // Main Box
         Box(
             modifier = Modifier
-                .wrapContentSize()
                 .clip(RoundedCornerShape(borderRadius))
                 .background(backgroundColor, shape = RoundedCornerShape(borderRadius))
                 .border(borderWidth, currentInk, shape = RoundedCornerShape(borderRadius)),
@@ -75,7 +75,7 @@ fun NeubrutalistButton(
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     val scale by animateFloatAsState(if (isPressed) 0.96f else 1f, label = "ButtonScale")
-    val currentInk = if (isSystemInDarkTheme()) BrandInkDark else BrandInk
+    val currentInk = MaterialTheme.colorScheme.onSurface
 
     Box(
         modifier = modifier
@@ -86,7 +86,8 @@ fun NeubrutalistButton(
                 indication = null,
                 enabled = enabled,
                 onClick = onClick
-            )
+            ),
+        propagateMinConstraints = true
     ) {
         // Shadow (disappears when pressed to simulate depth)
         if (!isPressed && enabled) {
@@ -100,7 +101,6 @@ fun NeubrutalistButton(
 
         Surface(
             modifier = Modifier
-                .fillMaxSize()
                 .offset(
                     x = if (isPressed) shadowOffset / 2 else 0.dp,
                     y = if (isPressed) shadowOffset / 2 else 0.dp
