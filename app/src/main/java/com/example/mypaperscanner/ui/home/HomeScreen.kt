@@ -184,10 +184,9 @@ fun HomeScreenContent(
                         color = MaterialTheme.colorScheme.onBackground
                     )
                     TextButton(onClick = onLibraryClick) {
-                        val brandBlue = if (androidx.compose.foundation.isSystemInDarkTheme()) BrandBlueDark else BrandBlue
                         Text(
                             "See All", 
-                            color = brandBlue, 
+                            color = MaterialTheme.colorScheme.primary, 
                             style = MaterialTheme.typography.bodyLarge, 
                             fontWeight = FontWeight.Bold
                         )
@@ -285,9 +284,14 @@ fun ToolCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // Check if we are in dark mode by comparing background color
+    val isDark = MaterialTheme.colorScheme.background == BrandBackgroundDark
+    val onColor = if (isDark) BrandInk else Color.White
+
     NeubrutalistButton(
         onClick = onClick,
         containerColor = color,
+        contentColor = onColor,
         modifier = modifier.height(110.dp),
         borderRadius = 20.dp,
         shadowOffset = 6.dp
@@ -301,14 +305,14 @@ fun ToolCard(
                 icon, 
                 contentDescription = null, 
                 modifier = Modifier.size(28.dp), 
-                tint = MaterialTheme.colorScheme.onBackground
+                tint = onColor
             )
             Spacer(modifier = Modifier.height(10.dp))
             Text(
                 title, 
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground,
+                color = onColor,
                 maxLines = 1
             )
         }
@@ -322,7 +326,9 @@ fun RecentStickyCard(
     rotation: Float
 ) {
     val isPdf = document.filePath.endsWith(".pdf", ignoreCase = true)
-    val currentInk = if (androidx.compose.foundation.isSystemInDarkTheme()) BrandInkDark else BrandInk
+    val currentInk = MaterialTheme.colorScheme.onSurface
+    val cardBackground = MaterialTheme.colorScheme.surface
+    val thumbnailBackground = MaterialTheme.colorScheme.surfaceVariant
     
     Box(
         modifier = Modifier
@@ -335,7 +341,7 @@ fun RecentStickyCard(
                 .fillMaxWidth()
                 .height(200.dp)
                 .clickable { onClick() },
-            backgroundColor = MaterialTheme.colorScheme.surface,
+            backgroundColor = cardBackground,
             borderRadius = 8.dp,
             shadowOffset = 6.dp
         ) {
@@ -344,7 +350,7 @@ fun RecentStickyCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(120.dp)
-                        .background(MaterialTheme.colorScheme.background)
+                        .background(thumbnailBackground)
                         .bottomBorder(1.dp, currentInk.copy(alpha = 0.1f))
                 ) {
                     if (document.thumbnailPath != null) {

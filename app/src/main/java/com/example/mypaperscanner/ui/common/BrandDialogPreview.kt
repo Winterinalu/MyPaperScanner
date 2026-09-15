@@ -79,17 +79,20 @@ fun BrandDialogThemeTogglePreview() {
 
                         Column(
                             modifier = Modifier.fillMaxWidth(),
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             NeubrutalistButton(
                                 onClick = {},
-                                containerColor = MaterialTheme.colorScheme.secondary
+                                containerColor = MaterialTheme.colorScheme.secondary,
+                                modifier = Modifier.fillMaxWidth()
                             ) {
                                 Text("PDF")
                             }
                             NeubrutalistButton(
                                 onClick = {},
-                                containerColor = MaterialTheme.colorScheme.primary
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.fillMaxWidth()
                             ) {
                                 Text("Images")
                             }
@@ -136,17 +139,20 @@ fun SaveScanDialogContentLightPreview() {
 
                     Column(
                         modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         NeubrutalistButton(
                             onClick = {},
-                            containerColor = MaterialTheme.colorScheme.secondary
+                            containerColor = MaterialTheme.colorScheme.secondary,
+                            modifier = Modifier.fillMaxWidth()
                         ) {
                             Text("PDF")
                         }
                         NeubrutalistButton(
                             onClick = {},
-                            containerColor = MaterialTheme.colorScheme.primary
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.fillMaxWidth()
                         ) {
                             Text("Images")
                         }
@@ -192,17 +198,20 @@ fun SaveScanDialogContentDarkPreview() {
 
                     Column(
                         modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         NeubrutalistButton(
                             onClick = {},
-                            containerColor = MaterialTheme.colorScheme.secondary
+                            containerColor = MaterialTheme.colorScheme.secondary,
+                            modifier = Modifier.fillMaxWidth()
                         ) {
                             Text("PDF")
                         }
                         NeubrutalistButton(
                             onClick = {},
-                            containerColor = MaterialTheme.colorScheme.primary
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.fillMaxWidth()
                         ) {
                             Text("Images")
                         }

@@ -92,7 +92,10 @@ fun SettingsScreen(
                         onCheckedChange = onDarkModeChange,
                         colors = SwitchDefaults.colors(
                             checkedThumbColor = MaterialTheme.colorScheme.primary,
-                            checkedTrackColor = MaterialTheme.colorScheme.primaryContainer
+                            checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
+                            uncheckedThumbColor = MaterialTheme.colorScheme.outline,
+                            uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+                            uncheckedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
                         )
                     )
                 }
@@ -117,20 +120,6 @@ fun SettingsScreen(
                 subtitle = "MyPaperScanner v1.0",
                 icon = Icons.Default.Info
             )
-            
-            Spacer(modifier = Modifier.height(40.dp))
-            
-            // Footer
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    "Made with ❤️ by Rober",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
-                )
-            }
         }
     }
 }
@@ -153,7 +142,8 @@ fun SettingsCard(
     onClick: (() -> Unit)? = null,
     trailingContent: @Composable (() -> Unit)? = null
 ) {
-    val currentInk = if (androidx.compose.foundation.isSystemInDarkTheme()) BrandInkDark else BrandInk
+    val isDark = MaterialTheme.colorScheme.background == com.example.mypaperscanner.ui.theme.BrandBackgroundDark
+    val currentInk = if (isDark) com.example.mypaperscanner.ui.theme.BrandInkDark else com.example.mypaperscanner.ui.theme.BrandInk
     
     NeubrutalistBox(
         modifier = Modifier
@@ -172,7 +162,7 @@ fun SettingsCard(
             Surface(
                 modifier = Modifier.size(48.dp),
                 shape = RoundedCornerShape(12.dp),
-                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                color = MaterialTheme.colorScheme.surfaceVariant,
                 border = androidx.compose.foundation.BorderStroke(1.dp, currentInk.copy(alpha = 0.2f))
             ) {
                 Icon(
