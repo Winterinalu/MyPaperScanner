@@ -40,7 +40,8 @@ fun NeubrutalistBox(
     
     // Outer padding reserves space for the offset shadow to prevent parent clipping
     Box(
-        modifier = modifier.padding(end = shadowOffset, bottom = shadowOffset)
+        modifier = modifier.padding(end = shadowOffset, bottom = shadowOffset),
+        propagateMinConstraints = true
     ) {
         // Shadow
         Box(
@@ -91,7 +92,8 @@ fun NeubrutalistButton(
                 indication = null,
                 enabled = enabled,
                 onClick = onClick
-            )
+            ),
+        propagateMinConstraints = true
     ) {
         // Shadow (disappears when pressed to simulate depth)
         if (!isPressed && enabled) {
@@ -105,7 +107,6 @@ fun NeubrutalistButton(
 
         Surface(
             modifier = Modifier
-                .fillMaxSize()
                 .offset(
                     x = if (isPressed) shadowOffset / 2 else 0.dp,
                     y = if (isPressed) shadowOffset / 2 else 0.dp

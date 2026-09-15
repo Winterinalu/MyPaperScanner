@@ -10,8 +10,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
@@ -23,7 +25,7 @@ fun BrandDialog(
     confirmButton: @Composable () -> Unit,
     dismissButton: (@Composable () -> Unit)? = null,
     mascotPose: MascotPose? = null,
-    properties: DialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+    properties: DialogProperties = DialogProperties(usePlatformDefaultWidth = true)
 ) {
     var isVisible by remember { mutableStateOf(false) }
 
@@ -34,9 +36,9 @@ fun BrandDialog(
     val infiniteTransition = rememberInfiniteTransition(label = "DialogFloat")
     val floatAnim by infiniteTransition.animateFloat(
         initialValue = 0f,
-        targetValue = 8f,
+        targetValue = 6.dp.value,
         animationSpec = infiniteRepeatable(
-            animation = tween(2000, easing = SineEaseInOut),
+            animation = tween(2500, easing = SineEaseInOut),
             repeatMode = RepeatMode.Reverse
         ),
         label = "Float"
@@ -47,7 +49,9 @@ fun BrandDialog(
         properties = properties
     ) {
         Box(
-            modifier = Modifier.wrapContentSize(),
+            modifier = Modifier
+                .wrapContentSize()
+                .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
             AnimatedVisibility(
@@ -57,18 +61,18 @@ fun BrandDialog(
                         dampingRatio = Spring.DampingRatioMediumBouncy,
                         stiffness = Spring.StiffnessLow
                     ),
-                    initialScale = 0.8f
+                    initialScale = 0.9f
                 ),
-                exit = scaleOut(targetScale = 0.8f)
+                exit = scaleOut(targetScale = 0.9f)
             ) {
                 NeubrutalistBox(
                     modifier = Modifier
-                        .widthIn(max = 320.dp)
-                        .fillMaxWidth(0.85f)
+                        .widthIn(max = 280.dp)
+                        .fillMaxWidth()
                         .wrapContentHeight()
                         .offset(y = floatAnim.dp),
                     backgroundColor = MaterialTheme.colorScheme.surface,
-                    borderRadius = 24.dp,
+                    borderRadius = 28.dp,
                     shadowOffset = 6.dp
                 ) {
                     Column(
@@ -81,33 +85,38 @@ fun BrandDialog(
                             Mascot(
                                 pose = mascotPose,
                                 modifier = Modifier
-                                    .size(100.dp)
-                                    .padding(bottom = 16.dp)
+                                    .size(70.dp)
+                                    .padding(bottom = 12.dp)
                             )
                         }
 
                         Text(
                             text = title,
-                            style = MaterialTheme.typography.headlineMedium,
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.ExtraBold,
                             color = MaterialTheme.colorScheme.onSurface,
                             textAlign = TextAlign.Center
                         )
 
-                        Spacer(modifier = Modifier.height(12.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
 
                         Text(
                             text = text,
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
-                            textAlign = TextAlign.Center
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                            textAlign = TextAlign.Center,
+                            lineHeight = 20.sp
                         )
 
                         Spacer(modifier = Modifier.height(24.dp))
 
                         Column(
                             modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
+                            // Note: confirmButton and dismissButton should ideally fillMaxWidth() 
+                            // when passed to BrandDialog for the best look.
                             confirmButton()
                             dismissButton?.invoke()
                         }

@@ -191,7 +191,7 @@ fun HomeScreenContent(
                     TextButton(onClick = onLibraryClick) {
                         Text(
                             "See All", 
-                            color = brandBlue, 
+                            color = MaterialTheme.colorScheme.primary, 
                             style = MaterialTheme.typography.bodyLarge, 
                             fontWeight = FontWeight.Bold
                         )
@@ -293,6 +293,7 @@ fun ToolCard(
     NeubrutalistButton(
         onClick = onClick,
         containerColor = color,
+        contentColor = onColor,
         modifier = modifier.height(110.dp),
         borderRadius = 20.dp,
         shadowOffset = 6.dp,
