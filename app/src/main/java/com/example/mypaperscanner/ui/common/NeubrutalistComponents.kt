@@ -128,6 +128,7 @@ fun StickerBadge(
     modifier: Modifier = Modifier,
     shadowOffset: Dp = 2.dp
 ) {
+    val currentInk = MaterialTheme.colorScheme.onSurface
     Box(
         modifier = modifier.padding(end = shadowOffset, bottom = shadowOffset)
     ) {
@@ -136,18 +137,18 @@ fun StickerBadge(
             modifier = Modifier
                 .matchParentSize()
                 .offset(x = shadowOffset, y = shadowOffset)
-                .background(BrandInk, shape = RoundedCornerShape(6.dp))
+                .background(currentInk, shape = RoundedCornerShape(6.dp))
         )
         // Badge
         Surface(
             color = containerColor,
             shape = RoundedCornerShape(6.dp),
-            modifier = Modifier.border(1.5.dp, BrandInk, shape = RoundedCornerShape(6.dp))
+            modifier = Modifier.border(1.5.dp, currentInk, shape = RoundedCornerShape(6.dp))
         ) {
             Text(
                 text = text,
                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                color = BrandInk,
+                color = currentInk,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.ExtraBold,
                 style = MaterialTheme.typography.labelSmall

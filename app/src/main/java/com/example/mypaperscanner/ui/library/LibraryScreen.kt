@@ -95,17 +95,19 @@ fun LibraryScreen(
                             snackbarHostState.showSnackbar("Document deleted")
                         }
                     },
-                    containerColor = MaterialTheme.colorScheme.error
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = MaterialTheme.colorScheme.onError
                 ) {
-                    Text("Delete Anyway", color = Color.White)
+                    Text("Delete Anyway")
                 }
             },
             dismissButton = {
                 NeubrutalistButton(
                     onClick = { documentToDelete = null },
-                    containerColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.onSurface
                 ) {
-                    Text("Keep It", color = BrandInk)
+                    Text("Keep It")
                 }
             }
         )
@@ -126,24 +128,26 @@ fun LibraryScreen(
                             snackbarHostState.showSnackbar("Documents deleted")
                         }
                     },
-                    containerColor = MaterialTheme.colorScheme.error
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = MaterialTheme.colorScheme.onError
                 ) {
-                    Text("Delete All", color = Color.White)
+                    Text("Delete All")
                 }
             },
             dismissButton = {
                 NeubrutalistButton(
                     onClick = { showBulkDeleteDialog = false },
-                    containerColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.onSurface
                 ) {
-                    Text("Cancel", color = BrandInk)
+                    Text("Cancel")
                 }
             }
         )
     }
 
     Scaffold(
-        containerColor = BrandBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState) { data ->
                 BrandSnackbar(snackbarData = data, type = SnackbarType.SUCCESS)
@@ -152,11 +156,11 @@ fun LibraryScreen(
         topBar = {
             if (viewModel.isSelectionMode) {
                 TopAppBar(
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = BrandBackground),
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
                     title = { Text("${viewModel.selectedIds.size} selected", style = MaterialTheme.typography.titleLarge) },
                     navigationIcon = {
                         IconButton(onClick = { viewModel.clearSelection() }) {
-                            Icon(Icons.Default.Close, contentDescription = "Clear", tint = BrandInk)
+                            Icon(Icons.Default.Close, contentDescription = "Clear", tint = MaterialTheme.colorScheme.onBackground)
                         }
                     },
                     actions = {
@@ -178,20 +182,20 @@ fun LibraryScreen(
                                 context.startActivity(android.content.Intent.createChooser(intent, "Share Documents"))
                             }
                         }) {
-                            Icon(Icons.Default.Share, contentDescription = "Share", tint = BrandInk)
+                            Icon(Icons.Default.Share, contentDescription = "Share", tint = MaterialTheme.colorScheme.onBackground)
                         }
                         IconButton(onClick = { showBulkDeleteDialog = true }) {
-                            Icon(Icons.Default.Delete, contentDescription = "Delete", tint = BrandInk)
+                            Icon(Icons.Default.Delete, contentDescription = "Delete", tint = MaterialTheme.colorScheme.onBackground)
                         }
                     }
                 )
             } else {
                 CenterAlignedTopAppBar(
-                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = BrandBackground),
-                    title = { Text("My Library", style = MaterialTheme.typography.headlineMedium, color = BrandInk) },
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = MaterialTheme.colorScheme.background),
+                    title = { Text("My Library", style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.onBackground) },
                     navigationIcon = {
                         IconButton(onClick = onBackClick) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = BrandInk)
+                            Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.onBackground)
                         }
                     }
                 )
@@ -211,12 +215,12 @@ fun LibraryScreen(
                     Text(
                         "Nothing here yet...",
                         style = MaterialTheme.typography.headlineMedium,
-                        color = BrandInk
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                     Text(
                         "Let's fix that! Start scanning.",
                         style = MaterialTheme.typography.bodyLarge,
-                        color = BrandInk.copy(alpha = 0.6f)
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                     )
                 }
             }
@@ -288,7 +292,7 @@ fun DocumentGridItem(
                 onClick = onClick,
                 onLongClick = onLongClick
             ),
-        backgroundColor = if (selected) MaterialTheme.colorScheme.primaryContainer else Color.White,
+        backgroundColor = if (selected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
         borderRadius = 12.dp
     ) {
         Column {
@@ -296,7 +300,7 @@ fun DocumentGridItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(140.dp)
-                    .background(BrandBackground)
+                    .background(MaterialTheme.colorScheme.background)
             ) {
                 if (document.thumbnailPath != null) {
                     AsyncImage(
@@ -312,14 +316,14 @@ fun DocumentGridItem(
                         if (isPdf) Icons.Default.PictureAsPdf else Icons.Default.Image,
                         contentDescription = null,
                         modifier = Modifier.size(48.dp).align(Alignment.Center),
-                        tint = BrandInk.copy(alpha = 0.2f)
+                        tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f)
                     )
                 }
                 
                 // Sticker badge
                 StickerBadge(
                     text = if (isPdf) "PDF" else "IMG",
-                    containerColor = if (isPdf) BrandGreen else BrandYellow,
+                    containerColor = if (isPdf) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.tertiary,
                     modifier = Modifier
                         .padding(8.dp)
                         .align(Alignment.TopEnd)
@@ -327,13 +331,13 @@ fun DocumentGridItem(
                 
                 if (selected) {
                     Box(
-                        modifier = Modifier.fillMaxSize().background(BrandBlue.copy(alpha = 0.2f)),
+                        modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             Icons.Default.CheckCircle,
                             contentDescription = null,
-                            tint = BrandBlue,
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(40.dp)
                         )
                     }
@@ -350,7 +354,7 @@ fun DocumentGridItem(
                         text = document.title,
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = BrandInk,
+                        color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f)
@@ -359,14 +363,14 @@ fun DocumentGridItem(
                         onClick = { showMenu = true },
                         modifier = Modifier.size(20.dp)
                     ) {
-                        Icon(Icons.Default.MoreVert, contentDescription = "More", modifier = Modifier.size(16.dp), tint = BrandInk)
+                        Icon(Icons.Default.MoreVert, contentDescription = "More", modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.onSurface)
                     }
                 }
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "${dateFormat.format(Date(document.createdAt))} • ${document.pageCount} pg",
                     style = MaterialTheme.typography.labelSmall,
-                    color = BrandInk.copy(alpha = 0.6f)
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                 )
             }
         }
@@ -381,7 +385,7 @@ fun DocumentGridItem(
             ) {
                 NeubrutalistBox(
                     modifier = Modifier.width(200.dp),
-                    backgroundColor = Color.White,
+                    backgroundColor = MaterialTheme.colorScheme.surface,
                     borderRadius = 16.dp,
                     shadowOffset = 4.dp
                 ) {

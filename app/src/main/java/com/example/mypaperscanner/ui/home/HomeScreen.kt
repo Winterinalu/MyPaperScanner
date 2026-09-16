@@ -217,7 +217,7 @@ fun HomeScreenContent(
                         .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(16.dp))
                         .border(
                             2.dp, 
-                            if (androidx.compose.foundation.isSystemInDarkTheme()) BrandInkDark else BrandInk, 
+                            MaterialTheme.colorScheme.onSurface, 
                             shape = RoundedCornerShape(16.dp)
                         ),
                     contentAlignment = Alignment.Center
@@ -285,9 +285,7 @@ fun ToolCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Check if we are in dark mode by comparing background color
-    val isDark = MaterialTheme.colorScheme.background == BrandBackgroundDark
-    val onColor = if (isDark) BrandInk else Color.White
+    val onColor = MaterialTheme.colorScheme.onPrimary // Use themed color for content on primary/secondary/tertiary cards
 
     NeubrutalistButton(
         onClick = onClick,
@@ -376,15 +374,15 @@ fun RecentStickyCard(
                             .align(Alignment.TopEnd)
                             .padding(8.dp)
                             .background(
-                                color = if (isPdf) BrandBlue else BrandGreen,
+                                color = if (isPdf) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary,
                                 shape = RoundedCornerShape(4.dp)
                             )
-                            .border(1.dp, Color.White, shape = RoundedCornerShape(4.dp))
+                            .border(1.dp, MaterialTheme.colorScheme.onPrimary, shape = RoundedCornerShape(4.dp))
                     ) {
                         Text(
                             text = if (isPdf) "PDF" else "IMG",
                             modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.onPrimary,
                             fontSize = 8.sp,
                             fontWeight = FontWeight.Bold
                         )
