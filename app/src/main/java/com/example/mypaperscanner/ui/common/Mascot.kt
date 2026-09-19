@@ -3,6 +3,7 @@ package com.example.mypaperscanner.ui.common
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -34,6 +35,8 @@ fun Mascot(
         label = "Float"
     )
 
+    val outlineColor = MaterialTheme.colorScheme.onSurface
+
     Canvas(modifier = modifier) {
         val w = size.width
         val h = size.height
@@ -48,7 +51,7 @@ fun Mascot(
             cornerRadius = CornerRadius(40f, 40f)
         )
         drawRoundRect(
-            color = BrandInk,
+            color = outlineColor,
             topLeft = Offset(centerX - w * 0.3f, centerY - h * 0.3f),
             size = Size(w * 0.6f, h * 0.6f),
             cornerRadius = CornerRadius(40f, 40f),
@@ -57,12 +60,12 @@ fun Mascot(
 
         // Face - Eyes
         drawCircle(
-            color = BrandInk,
+            color = outlineColor,
             radius = 8f,
             center = Offset(centerX - w * 0.1f, centerY - h * 0.05f)
         )
         drawCircle(
-            color = BrandInk,
+            color = outlineColor,
             radius = 8f,
             center = Offset(centerX + w * 0.1f, centerY - h * 0.05f)
         )
@@ -78,7 +81,7 @@ fun Mascot(
                     cornerRadius = CornerRadius(10f, 10f)
                 )
                 drawRoundRect(
-                    color = BrandInk,
+                    color = outlineColor,
                     topLeft = Offset(centerX + w * 0.25f, centerY - h * 0.1f),
                     size = Size(w * 0.2f, h * 0.1f),
                     cornerRadius = CornerRadius(10f, 10f),
@@ -86,7 +89,7 @@ fun Mascot(
                 )
                 // Smile
                 drawArc(
-                    color = BrandInk,
+                    color = outlineColor,
                     startAngle = 0f,
                     sweepAngle = 180f,
                     useCenter = false,
@@ -104,13 +107,13 @@ fun Mascot(
                     cornerRadius = CornerRadius(10f, 10f)
                 )
                 drawRoundRect(
-                    color = BrandInk,
+                    color = outlineColor,
                     topLeft = Offset(centerX - w * 0.15f, centerY + h * 0.05f),
                     size = Size(w * 0.3f, h * 0.2f),
                     cornerRadius = CornerRadius(10f, 10f),
                     style = Stroke(width = 4f)
                 )
-                drawCircle(color = BrandInk, radius = 15f, center = Offset(centerX, centerY + h * 0.15f))
+                drawCircle(color = outlineColor, radius = 15f, center = Offset(centerX, centerY + h * 0.15f))
             }
             MascotPose.HAPPY -> {
                 // Wide Smile
@@ -123,7 +126,7 @@ fun Mascot(
                     size = Size(60f, 40f)
                 )
                 drawArc(
-                    color = BrandInk,
+                    color = outlineColor,
                     startAngle = 0f,
                     sweepAngle = 180f,
                     useCenter = false,
@@ -135,13 +138,13 @@ fun Mascot(
             MascotPose.SEARCHING -> {
                 // One eye bigger
                 drawCircle(
-                    color = BrandInk,
+                    color = outlineColor,
                     radius = 12f,
                     center = Offset(centerX - w * 0.1f, centerY - h * 0.05f)
                 )
                 // Straight mouth
                 drawLine(
-                    color = BrandInk,
+                    color = outlineColor,
                     start = Offset(centerX - 20f, centerY + 30f),
                     end = Offset(centerX + 20f, centerY + 30f),
                     strokeWidth = 4f
@@ -149,11 +152,11 @@ fun Mascot(
             }
             MascotPose.UH_OH -> {
                 // Wide eyes
-                drawCircle(color = BrandInk, radius = 10f, center = Offset(centerX - w * 0.12f, centerY - h * 0.05f))
-                drawCircle(color = BrandInk, radius = 10f, center = Offset(centerX + w * 0.12f, centerY - h * 0.05f))
+                drawCircle(color = outlineColor, radius = 10f, center = Offset(centerX - w * 0.12f, centerY - h * 0.05f))
+                drawCircle(color = outlineColor, radius = 10f, center = Offset(centerX + w * 0.12f, centerY - h * 0.05f))
                 // O-shaped mouth
                 drawCircle(
-                    color = BrandInk,
+                    color = outlineColor,
                     radius = 15f,
                     center = Offset(centerX, centerY + 25f),
                     style = Stroke(width = 4f)
@@ -162,14 +165,14 @@ fun Mascot(
             MascotPose.CONFUSED -> {
                 // One eyebrow up
                 drawLine(
-                    color = BrandInk,
+                    color = outlineColor,
                     start = Offset(centerX - w * 0.15f, centerY - h * 0.15f),
                     end = Offset(centerX - w * 0.05f, centerY - h * 0.12f),
                     strokeWidth = 4f
                 )
                 // Wavy mouth
                 drawArc(
-                    color = BrandInk,
+                    color = outlineColor,
                     startAngle = 0f,
                     sweepAngle = 180f,
                     useCenter = false,
@@ -178,7 +181,7 @@ fun Mascot(
                     style = Stroke(width = 4f)
                 )
                 drawArc(
-                    color = BrandInk,
+                    color = outlineColor,
                     startAngle = 180f,
                     sweepAngle = 180f,
                     useCenter = false,

@@ -25,7 +25,7 @@ fun BrandSnackbar(
     val accentColor = when (type) {
         SnackbarType.SUCCESS -> BrandGreen
         SnackbarType.ERROR -> Error
-        SnackbarType.INFO -> BrandInk
+        SnackbarType.INFO -> MaterialTheme.colorScheme.onSurface
     }
 
     NeubrutalistBox(
@@ -54,7 +54,7 @@ fun BrandSnackbar(
             Text(
                 text = snackbarData.visuals.message,
                 style = MaterialTheme.typography.bodyMedium,
-                color = BrandInk,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.weight(1f)
             )
             
