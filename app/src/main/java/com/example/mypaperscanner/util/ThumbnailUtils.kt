@@ -10,9 +10,9 @@ import java.io.FileOutputStream
 
 object ThumbnailUtils {
     
-    fun generateThumbnail(context: Context, file: File, isPdf: Boolean): String? {
+    fun generateThumbnail(context: Context, file: File, isPdf: Boolean, force: Boolean = false): String? {
         val thumbnailFile = File(context.cacheDir, "thumb_${file.nameWithoutExtension}.jpg")
-        if (thumbnailFile.exists()) return thumbnailFile.absolutePath
+        if (thumbnailFile.exists() && !force) return thumbnailFile.absolutePath
 
         return try {
             val bitmap = if (isPdf) {

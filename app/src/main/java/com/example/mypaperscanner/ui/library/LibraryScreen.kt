@@ -239,7 +239,7 @@ fun LibraryScreen(
                     DocumentGridItem(
                         document = doc,
                         selected = viewModel.selectedIds.contains(doc.id),
-                        onClick = { 
+                        onClick = {
                             if (viewModel.isSelectionMode) {
                                 viewModel.toggleSelection(doc.id)
                             } else {

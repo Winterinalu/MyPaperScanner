@@ -13,6 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -22,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -50,6 +50,7 @@ fun HomeScreen(
     onSettingsClick: () -> Unit
 ) {
     val recentDocuments by viewModel.recentDocuments.collectAsState()
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
     val context = LocalContext.current
 
     LaunchedEffect(recentDocuments) {
@@ -58,6 +59,8 @@ fun HomeScreen(
 
     HomeScreenContent(
         recentDocuments = recentDocuments,
+        isRefreshing = isRefreshing,
+        onRefresh = { viewModel.refresh(context) },
         onScanClick = onScanClick,
         onImageToPdfClick = onImageToPdfClick,
         onPdfToPictureClick = onPdfToPictureClick,
@@ -67,9 +70,12 @@ fun HomeScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenContent(
     recentDocuments: List<ScannedDocument>,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
     onScanClick: () -> Unit,
     onImageToPdfClick: () -> Unit,
     onPdfToPictureClick: () -> Unit,
@@ -80,14 +86,20 @@ fun HomeScreenContent(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
-        Column(
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = onRefresh,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .verticalScroll(rememberScrollState())
-                .padding(bottom = 32.dp)
         ) {
-            // Modern Header Section
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(bottom = 32.dp)
+            ) {
+                // Modern Header Section
             HeaderSection(onSettingsClick = onSettingsClick)
             
             Column(modifier = Modifier.padding(horizontal = 24.dp)) {
@@ -231,6 +243,7 @@ fun HomeScreenContent(
             }
         }
     }
+}
 }
 
 @Composable

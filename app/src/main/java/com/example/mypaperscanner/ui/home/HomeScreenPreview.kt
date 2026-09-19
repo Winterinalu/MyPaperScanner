@@ -39,6 +39,8 @@ fun HomeScreenModernPreview() {
     MyPaperScannerTheme(darkTheme = false) {
         HomeScreenContent(
             recentDocuments = mockDocuments,
+            isRefreshing = false,
+            onRefresh = {},
             onScanClick = {},
             onImageToPdfClick = {},
             onPdfToPictureClick = {},
@@ -74,6 +76,8 @@ fun HomeScreenModernDarkPreview() {
     MyPaperScannerTheme(darkTheme = true) {
         HomeScreenContent(
             recentDocuments = mockDocuments,
+            isRefreshing = false,
+            onRefresh = {},
             onScanClick = {},
             onImageToPdfClick = {},
             onPdfToPictureClick = {},
