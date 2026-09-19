@@ -26,39 +26,43 @@ class HomeViewModel(private val repository: DocumentRepository) : ViewModel() {
     fun refresh(context: Context) {
         viewModelScope.launch {
             _isRefreshing.value = true
-            checkAndGenerateThumbnails(context, force = true)
+            performThumbnailCheck(context, force = true)
             _isRefreshing.value = false
         }
     }
 
     fun checkAndGenerateThumbnails(context: Context, force: Boolean = false) {
         viewModelScope.launch {
-            recentDocuments.value.forEach { doc ->
-                val thumbnailPath = doc.thumbnailPath
-                val thumbFile = thumbnailPath?.let { File(it) }
-                
-                val oneDayMillis = 24 * 60 * 60 * 1000L
-                val isExpired = (thumbFile != null && thumbFile.exists()) && 
-                               (System.currentTimeMillis() - thumbFile.lastModified() > oneDayMillis)
-                
-                val needsGeneration = thumbnailPath == null || 
-                                     thumbFile == null || 
-                                     !thumbFile.exists() || 
-                                     (force && isExpired)
+            performThumbnailCheck(context, force = force)
+        }
+    }
 
-                if (needsGeneration) {
-                    val file = File(doc.filePath)
-                    if (file.exists()) {
-                        val isPdf = doc.filePath.endsWith(".pdf", ignoreCase = true)
-                        val thumbPath = ThumbnailUtils.generateThumbnail(
-                            context, 
-                            file, 
-                            isPdf, 
-                            force = force && isExpired,
-                        )
-                        if (thumbPath != null && thumbPath != doc.thumbnailPath) {
-                            repository.updateDocument(doc.copy(thumbnailPath = thumbPath))
-                        }
+    private suspend fun performThumbnailCheck(context: Context, force: Boolean) {
+        recentDocuments.value.forEach { doc ->
+            val thumbnailPath = doc.thumbnailPath
+            val thumbFile = thumbnailPath?.let { File(it) }
+            
+            val oneDayMillis = 24 * 60 * 60 * 1000L
+            val isExpired = (thumbFile != null && thumbFile.exists()) && 
+                           (System.currentTimeMillis() - thumbFile.lastModified() > oneDayMillis)
+            
+            val needsGeneration = thumbnailPath == null || 
+                                 thumbFile == null || 
+                                 !thumbFile.exists() || 
+                                 (force && isExpired)
+
+            if (needsGeneration) {
+                val file = File(doc.filePath)
+                if (file.exists()) {
+                    val isPdf = doc.filePath.endsWith(".pdf", ignoreCase = true)
+                    val thumbPath = ThumbnailUtils.generateThumbnail(
+                        context, 
+                        file, 
+                        isPdf, 
+                        force = force && isExpired,
+                    )
+                    if (thumbPath != null && thumbPath != doc.thumbnailPath) {
+                        repository.updateDocument(doc.copy(thumbnailPath = thumbPath))
                     }
                 }
             }
